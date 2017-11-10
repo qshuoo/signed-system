@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qys.dao.SignMapper">
+  <resultMap id="BaseResultMap" type="com.qys.pojo.Sign">
+    <id column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="uname" jdbcType="VARCHAR" property="uname" />
+    <result column="stime" jdbcType="VARCHAR" property="stime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sid, uname, stime, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sign
+    where sid = #{sid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sign
+    where sid = #{sid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qys.pojo.Sign">
+    insert into sign (sid, uname, stime, 
+      status)
+    values (#{sid,jdbcType=INTEGER}, #{uname,jdbcType=VARCHAR}, #{stime,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qys.pojo.Sign">
+    insert into sign
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sid != null">
+        sid,
+      </if>
+      <if test="uname != null">
+        uname,
+      </if>
+      <if test="stime != null">
+        stime,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sid != null">
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="uname != null">
+        #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="stime != null">
+        #{stime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qys.pojo.Sign">
+    update sign
+    <set>
+      <if test="uname != null">
+        uname = #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="stime != null">
+        stime = #{stime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where sid = #{sid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qys.pojo.Sign">
+    update sign
+    set uname = #{uname,jdbcType=VARCHAR},
+      stime = #{stime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
+    where sid = #{sid,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getSignByUname" resultType="Sign" parameterType="map">
+  	select * from sign
+  	<where>
+  		<if test="uname != null and uname != ''">
+  			uname like CONCAT(CONCAT('%', #{uname,jdbcType=VARCHAR}), '%')
+  		</if>
+  	</where>
+  	order by sid desc limit #{pageNo}, #{pageSize}
+  </select>
+  
+  <select id="getAllSign" resultType="Sign">
+  	select * from sign
+  </select>
+  
+  <select id="getSignCount" resultType="java.lang.Integer" parameterType="Sign">
+  	select count(*) from sign
+  	<if test="uname != null and uname != ''">
+  		where uname like CONCAT(CONCAT('%', #{uname,jdbcType=VARCHAR}), '%')
+  	</if>
+  </select>
+</mapper>
